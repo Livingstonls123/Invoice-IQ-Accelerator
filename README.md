@@ -15,7 +15,7 @@ Drop an invoice into Azure Blob Storage and an **autonomous Copilot Studio agent
 | 5 | Load & shape | Fabric **Dataflow Gen2** | `fabric/dataflow-gen2-*.pq` |
 | 6 | Store | Fabric **Lakehouse** (`invoices`, `dim_date`) | `fabric/README.md` |
 | 7 | Model | **Semantic model** (Direct Lake) + DAX measures | `fabric/semantic-model-measures.dax` |
-| 8 | Report | **Power BI** report *Invoice Insights* | `fabric/powerbi-report-layout.md` |
+| 8 | Report | **Power BI** report *Invoice Insights* — Overview page built with Copilot | `fabric/powerbi-copilot-prompt.md` |
 
 ## Quick start
 ```bash
@@ -39,7 +39,7 @@ Then follow **[docs/deployment-guide.md](docs/deployment-guide.md)** — six pha
 ├── copilot-studio/                  agent instructions, setup guide, optional MCP custom connector
 ├── power-automate/                  Flow 1 (blob trigger + SAS) and Flow 2 (save to Excel)
 ├── excel/                           AutomatedInvoiceProcessingAgentOutput.xlsx (table InvoiceOutput)
-├── fabric/                          Dataflow Gen2 M queries, DAX measures, report layout
+├── fabric/                          Dataflow Gen2 M queries, DAX measures, Power BI Copilot prompt
 ├── sample-data/                     3 test invoices (INR, USD, GBP)
 ├── scripts/                         deploy.sh · upload_sample.sh · test_mcp.py · build_assets.py
 ├── docs/                            deployment guide, architecture, CI/CD setup, hardening, screenshots

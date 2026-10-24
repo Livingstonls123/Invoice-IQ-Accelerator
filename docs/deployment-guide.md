@@ -19,7 +19,7 @@ Build it **back to front** — each phase ends with a check, so you never debug 
 | 3 | Copilot Studio agent: instructions, MCP tool, flow tool, Blob trigger | 40 min |
 | 4 | End-to-end invoice test | 15 min |
 | 5 | Fabric: Dataflow Gen2 → Lakehouse → Semantic model | 45 min |
-| 6 | Power BI report + sharing | 45 min |
+| 6 | Power BI Overview page with Copilot + sharing | 15 min |
 
 ---
 
@@ -149,7 +149,7 @@ Follow [fabric/README.md](../fabric/README.md):
 
 ## Phase 6 — Power BI report
 
-Build **Invoice Insights** from `sm_invoiceiq` using [fabric/powerbi-report-layout.md](../fabric/powerbi-report-layout.md) (Overview · Vendors · Customers & tax · Extraction quality · Vendor drill-through), then publish a workspace **App** to Finance & Ops.
+Create **Invoice Insights** from `sm_invoiceiq` and build the **Overview** page with Copilot in Power BI using the prompt in [fabric/powerbi-copilot-prompt.md](../fabric/powerbi-copilot-prompt.md), then publish a workspace **App** to Finance & Ops.
 
 **Check ✅** — upload a new invoice → agent writes the row → after the next dataflow refresh it appears in the report.
 

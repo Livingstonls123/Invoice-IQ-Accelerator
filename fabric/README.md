@@ -10,7 +10,7 @@ Lakehouse  lh_invoiceiq   tables: invoices, dim_date
 Semantic model  sm_invoiceiq                 ← fabric/semantic-model-measures.dax
         │
         ▼
-Power BI report  Invoice Insights            ← fabric/powerbi-report-layout.md
+Power BI report  Invoice Insights (Overview) ← fabric/powerbi-copilot-prompt.md
 ```
 
 **Prerequisites:** a Fabric capacity (F2 is enough for a pilot, or a Fabric trial) and a workspace, e.g. `InvoiceIQ`, assigned to it. Your account needs read access to the Excel file.
@@ -55,7 +55,7 @@ For **each** query (`invoices`, then `dim_date`):
 4. Formats: amount measures `#,##0.00`; `%` measures *Percentage*, 1 decimal; `Average Confidence` *Percentage*.
 
 ## Step 5 — Power BI report
-From the semantic model → **Create report → Start from scratch**, then build the pages in [`powerbi-report-layout.md`](powerbi-report-layout.md). Save as **Invoice Insights** in the same workspace.
+From the semantic model → **Create report → Start from scratch**, open the **Copilot** pane and run the Overview prompt in [`powerbi-copilot-prompt.md`](powerbi-copilot-prompt.md). Save as **Invoice Insights** in the same workspace.
 
 ## Step 6 — Share
 Workspace → **Create app** → include the report → audience *Finance & Ops* group. (Consumers need Power BI Pro/PPU unless the capacity is F64 or larger.)
