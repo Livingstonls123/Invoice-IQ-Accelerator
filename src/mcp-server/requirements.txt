@@ -1,0 +1,5 @@
+mcp>=1.12,<2
+uvicorn[standard]>=0.30
+azure-identity>=1.17
+azure-storage-blob>=12.22
+azure-ai-documentintelligence>=1.0.0

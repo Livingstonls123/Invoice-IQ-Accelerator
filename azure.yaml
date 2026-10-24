@@ -1,0 +1,9 @@
+# Azure Developer CLI - `azd up` provisions infra/ and deploys the MCP server
+name: invoiceiq-agent
+metadata:
+  template: invoiceiq-agent-accelerator@1.0.0
+services:
+  mcp-server:
+    project: ./src/mcp-server
+    language: py
+    host: appservice

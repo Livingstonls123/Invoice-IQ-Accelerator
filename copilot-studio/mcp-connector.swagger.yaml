@@ -1,0 +1,31 @@
+# Optional: Power Platform custom connector for the Invoice Extraction MCP server.
+# Use this instead of the "Add a tool → Model Context Protocol" wizard if you want the
+# connector inside a solution (to move it between environments).
+# Replace <MCP_APP_HOST> with the App Service host name (<MCP_APP_NAME>.azurewebsites.net).
+swagger: "2.0"
+info:
+  title: Invoice Extraction MCP
+  description: Extract invoice data using Azure Document Intelligence.
+  version: "1.0.0"
+host: <MCP_APP_HOST>
+basePath: /
+schemes:
+  - https
+consumes: []
+produces: []
+securityDefinitions:
+  api_key:
+    type: apiKey
+    in: header
+    name: x-api-key
+security:
+  - api_key: []
+paths:
+  /mcp:
+    post:
+      summary: Invoice Extraction MCP
+      x-ms-agentic-protocol: mcp-streamable-1.0
+      operationId: InvokeMCP
+      responses:
+        "200":
+          description: Success

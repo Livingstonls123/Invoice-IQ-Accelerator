@@ -1,0 +1,75 @@
+// =====================================================================================
+// Semantic model 'sm_invoiceiq' (Direct Lake on lh_invoiceiq) — measures
+// Add to the 'invoices' table: Model view → select table → New measure → paste one block.
+//
+// Invoices arrive in several currencies (INR, USD, GBP, EUR …). Amount measures only
+// return a value when ONE currency is in context, so totals are never silently mixed.
+// Put a single-select Currency slicer on every page (default INR).
+// =====================================================================================
+
+Invoice Count = COUNTROWS ( invoices )
+
+Vendor Count = DISTINCTCOUNT ( invoices[VendorName] )
+
+Customer Count = DISTINCTCOUNT ( invoices[CustomerName] )
+
+Currency Count = DISTINCTCOUNT ( invoices[Currency] )
+
+Selected Currency =
+    IF ( HASONEVALUE ( invoices[Currency] ), VALUES ( invoices[Currency] ), "Select one currency" )
+
+Total Invoice Value =
+    IF ( HASONEVALUE ( invoices[Currency] ), SUM ( invoices[InvoiceTotal] ) )
+
+Total Tax =
+    IF ( HASONEVALUE ( invoices[Currency] ), SUM ( invoices[TotalTax] ) )
+
+Net Value (excl. Tax) = [Total Invoice Value] - [Total Tax]
+
+Tax % of Invoice Value = DIVIDE ( [Total Tax], [Total Invoice Value] )
+
+Average Invoice Value = DIVIDE ( [Total Invoice Value], [Invoice Count] )
+
+Largest Invoice =
+    IF ( HASONEVALUE ( invoices[Currency] ), MAX ( invoices[InvoiceTotal] ) )
+
+// ---- time intelligence (relationship dim_date[Date] 1:* invoices[InvoiceDate]) --------
+Invoice Value MTD = TOTALMTD ( [Total Invoice Value], dim_date[Date] )
+
+Invoice Value Prev Month =
+    CALCULATE ( [Total Invoice Value], DATEADD ( dim_date[Date], -1, MONTH ) )
+
+Invoice Value MoM % =
+    DIVIDE ( [Total Invoice Value] - [Invoice Value Prev Month], [Invoice Value Prev Month] )
+
+Invoice Value FYTD = TOTALYTD ( [Total Invoice Value], dim_date[Date], "31/3" )
+
+Invoices This Month =
+    CALCULATE ( [Invoice Count], DATESMTD ( dim_date[Date] ) )
+
+// ---- vendor concentration ---------------------------------------------------------------
+Top Vendor Share % =
+    VAR TopVendorValue =
+        MAXX ( VALUES ( invoices[VendorName] ), CALCULATE ( [Total Invoice Value] ) )
+    RETURN DIVIDE ( TopVendorValue, [Total Invoice Value] )
+
+Vendor Rank =
+    IF ( HASONEVALUE ( invoices[VendorName] ),
+         RANKX ( ALLSELECTED ( invoices[VendorName] ), [Total Invoice Value], , DESC, DENSE ) )
+
+// ---- extraction quality -----------------------------------------------------------------
+Average Confidence = AVERAGE ( invoices[ConfidenceScore] )
+
+Low Confidence Invoices =
+    CALCULATE ( [Invoice Count], invoices[ConfidenceBand] IN { "Low", "Unknown" } )
+
+Invoices Needing Check =
+    CALCULATE ( [Invoice Count], invoices[DataQuality] = "Check" )
+
+Complete Extraction % =
+    DIVIDE ( CALCULATE ( [Invoice Count], invoices[DataQuality] = "Complete" ), [Invoice Count] )
+
+Missing Field Rate % =
+    DIVIDE ( SUM ( invoices[MissingFieldCount] ), [Invoice Count] * 7 )
+
+Last Refresh (UTC) = MAX ( invoices[LoadedAtUtc] )

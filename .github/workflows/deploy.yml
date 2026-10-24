@@ -1,0 +1,67 @@
+name: Deploy
+
+# Uses OpenID Connect (no stored Azure secrets). One-time setup: see docs/github-actions-setup.md
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: GitHub environment to deploy (dev / prod)
+        default: dev
+        required: true
+  push:
+    branches: [main]
+    paths: ["src/**", "infra/**"]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'dev' }}
+    env:
+      AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
+      AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Provision infrastructure (Bicep)
+        id: infra
+        run: |
+          out=$(az deployment sub create \
+            --name "invoiceiq-${{ github.run_number }}" \
+            --location "$AZURE_LOCATION" \
+            --template-file infra/main.bicep \
+            --parameters environmentName="$AZURE_ENV_NAME" location="$AZURE_LOCATION" \
+                         docIntelLocation="${{ vars.DOCINTEL_LOCATION || vars.AZURE_LOCATION }}" \
+                         mcpApiKey="${{ secrets.MCP_API_KEY }}" \
+            --query properties.outputs -o json)
+          echo "app=$(echo "$out" | jq -r .MCP_APP_NAME.value)" >> "$GITHUB_OUTPUT"
+          echo "url=$(echo "$out" | jq -r .MCP_SERVER_URL.value)" >> "$GITHUB_OUTPUT"
+
+      - name: Package MCP server
+        working-directory: src/mcp-server
+        run: zip -r ../../mcp-server.zip . -x "tests/*" ".env*" "__pycache__/*"
+
+      - name: Deploy to App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ steps.infra.outputs.app }}
+          package: mcp-server.zip
+
+      - name: Smoke test
+        run: |
+          base="${{ steps.infra.outputs.url }}"; base="${base%/mcp}"
+          for i in $(seq 1 20); do
+            if curl -fsS "$base/health"; then echo; echo "MCP endpoint: ${{ steps.infra.outputs.url }}"; exit 0; fi
+            sleep 15
+          done
+          echo "Health check failed"; exit 1

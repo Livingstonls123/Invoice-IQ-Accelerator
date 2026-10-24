@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": { "value": "${AZURE_ENV_NAME}" },
+    "location": { "value": "${AZURE_LOCATION=centralindia}" },
+    "docIntelLocation": { "value": "${DOCINTEL_LOCATION=centralindia}" },
+    "invoiceContainerName": { "value": "automated-invoice-processing-agent" },
+    "allowSharedKeyAccess": { "value": true },
+    "appServiceSku": { "value": "B1" },
+    "mcpApiKey": { "value": "${MCP_API_KEY}" },
+    "developerPrincipalId": { "value": "${AZURE_PRINCIPAL_ID=}" }
+  }
+}
