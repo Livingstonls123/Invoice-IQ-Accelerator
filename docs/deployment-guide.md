@@ -118,14 +118,14 @@ When done, the Overview page looks like this:
 
 ## Phase 4 — End-to-end invoice test
 
-1. Upload the three samples (portal **Upload**, Storage Explorer, or the script):
+1. Upload the six samples (portal **Upload**, Storage Explorer, or the script):
    ```bash
    for f in sample-data/*.pdf; do ./scripts/upload_sample.sh <STORAGE_ACCOUNT_NAME> "$f" >/dev/null; done
    ```
    ![Blob container](images/ref-01-blob-container.png)
 2. Copilot Studio → **Activity**: one run per file — *Trigger detected* → `extract_invoice` → *Save Automated Invoice Output* → "Invoice processed successfully…".
    ![Activity run](images/ref-03-activity-run.png)
-3. Excel: three new rows (INR, USD with `TotalTax` = NA, GBP).
+3. Excel: six new rows — INR office supplies, USD cloud services (`TotalTax` = NA), GBP consulting, CHF design services, INR healthcare supplies (GST 12 %) and INR telecom bill (GST 18 %).
 4. Then try a few real, non-confidential invoices from different vendors and layouts; check values against the PDFs.
 
 **Check ✅** — every uploaded file has exactly one row; `DocumentURL` has no `?sv=…&sig=…` part.

@@ -105,4 +105,19 @@ invoice_pdf(out / "03_Tailspin_Consulting_GBP.pdf", "Tailspin Consulting Ltd",
             "221 King's Road, London SW3 5EL, UK   VAT: GB123456789", "TSC-2026-0457", "15/10/2026", "14/11/2026",
             "Fabrikam Manufacturing Ltd",
             [("Architecture workshop (days)", 3, 950.0), ("Travel & expenses", 1, 310.0)], "VAT 20%", 0.20, "GBP")
+# Industries and currencies seen in the reference demo (Swiss CHF, healthcare GST, telecom bill)
+invoice_pdf(out / "04_Graphic_Design_Institute_CHF.pdf", "Graphic Design Institute AG",
+            "Bahnhofstrasse 45, 8001 Zurich, Switzerland   MWST: CHE-123.456.789", "GDI-2026-3108", "31-Aug-26",
+            "30-Sep-26", "Contoso Automotive India Ltd - Accounts Payable",
+            [("Brand guideline refresh", 1, 650.0), ("Packaging artwork (SKUs)", 3, 50.0)], "VAT 8.1%", 0.081, "CHF")
+invoice_pdf(out / "05_Litware_Healthcare_Supply_GST_INR.pdf", "Litware Healthcare Supplies Pvt Ltd",
+            "Plot 7, Genome Valley, Hyderabad 500078, India   GSTIN: 36AAGCL5678K1Z2", "LHS/26-27/0915",
+            "18-10-2026", "17-11-2026", "Fabrikam Hospitals Ltd, Pune",
+            [("Nitrile examination gloves (box of 100)", 40, 320.0), ("Surgical masks 3-ply (box of 50)", 60, 145.0),
+             ("Digital thermometer", 25, 410.0)], "GST 12%", 0.12, "INR")
+invoice_pdf(out / "06_Woodgrove_Telecom_Bill_INR.pdf", "Woodgrove Telecom Services Ltd",
+            "Tower B, Cyber City, Gurugram 122002, India   GSTIN: 06AACCW4321M1Z9", "WTS-ENT-2026-10-55821",
+            "01-10-2026", "21-10-2026", "Adventure Works Cycles India - Accounts Payable",
+            [("Enterprise broadband 1 Gbps - October", 1, 18500.0), ("MPLS link - Chennai branch", 2, 9200.0),
+             ("Mobile plan - corporate (users)", 45, 399.0)], "GST 18%", 0.18, "INR")
 print("Columns:", OUTPUT_COLUMNS)

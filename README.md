@@ -17,6 +17,11 @@ Drop an invoice into Azure Blob Storage and an **autonomous Copilot Studio agent
 | 7 | Model | **Semantic model** (Direct Lake) + DAX measures | `fabric/semantic-model-measures.dax` |
 | 8 | Report | **Power BI** report *Invoice Insights* — Overview page built with Copilot | `fabric/powerbi-copilot-prompt.md` |
 
+## Why InvoiceIQ
+Finance and operations teams key invoices in by hand — vendor, invoice number, tax, currency, total — which is slow and error-prone at volume. InvoiceIQ makes the upload the only manual step: in the reference demo an invoice goes from Blob Storage to Excel in **about 14 seconds**, and Finance watches spend and extraction quality on a Power BI dashboard instead of a spreadsheet.
+
+**Presales kit:** [Solution brief](docs/solution-brief.md) · [4-minute demo script](docs/demo-script.md) · [Word overview with screenshots](docs/InvoiceIQ_Solution_Demo_Overview.docx)
+
 ## Quick start
 ```bash
 azd auth login
@@ -40,9 +45,9 @@ Then follow **[docs/deployment-guide.md](docs/deployment-guide.md)** — six pha
 ├── power-automate/                  Flow 1 (blob trigger + SAS) and Flow 2 (save to Excel)
 ├── excel/                           AutomatedInvoiceProcessingAgentOutput.xlsx (table InvoiceOutput)
 ├── fabric/                          Dataflow Gen2 M queries, DAX measures, Power BI Copilot prompt
-├── sample-data/                     3 test invoices (INR, USD, GBP)
+├── sample-data/                     6 test invoices (INR, USD, GBP, CHF; supplies, cloud, consulting, design, healthcare GST, telecom)
 ├── scripts/                         deploy.sh · upload_sample.sh · test_mcp.py · build_assets.py
-├── docs/                            deployment guide, architecture, CI/CD setup, hardening, screenshots
+├── docs/                            solution brief, demo script, deployment guide, architecture, CI/CD, hardening, screenshots
 └── .github/workflows/               ci.yml (tests + Bicep lint) · deploy.yml (OIDC)
 ```
 
@@ -57,6 +62,8 @@ Missing values are written as `NA`. The SAS token is removed from `DocumentURL`.
 Managed identity from the MCP app to Document Intelligence, Storage and Key Vault · Document Intelligence key auth disabled · MCP API key only in Key Vault · read-only 2-hour SAS per invoice, never stored · HTTPS/TLS 1.2. The storage account allows access keys by default because the reference build's Blob connector uses them; [docs/hardening.md](docs/hardening.md) shows the keyless setup and the rest of the production checklist.
 
 ## Docs
+- [Solution brief](docs/solution-brief.md) — business case, components, benefits, engagement plan
+- [Demo script](docs/demo-script.md) — run of show, talking points, recovery tips, Q&A
 - [Step-by-step deployment guide](docs/deployment-guide.md)
 - [Architecture & data contract](docs/architecture.md)
 - [GitHub Actions setup](docs/github-actions-setup.md)
