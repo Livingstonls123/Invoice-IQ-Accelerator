@@ -23,6 +23,19 @@ Bottom right: a table of InvoiceDate, VendorName, InvoiceNumber, CustomerName, I
 Add single-select slicers for Currency and dim_date[FiscalYear] at the top, and a card showing Last Refresh (UTC).
 ```
 
+## Demo prompt — Invoice Processing Overview
+The prompt used in the reference demo. It focuses on extraction quality as well as spend, which suits a live demo better than the Overview above. Run it on a second page (or a separate report) called **Invoice Processing Overview**.
+```
+Create a report page called "Invoice Processing Overview" using the invoices and dim_date tables.
+Top row: KPI cards for Total Invoice Value, Total Tax, Invoice Count, Average Invoice Value, and Average Confidence formatted as a percentage.
+Middle row: a clustered bar chart of Total Invoice Value by VendorName, sorted descending, and a clustered bar chart of Total Invoice Value by CustomerName, sorted descending.
+Bottom row: a table of VendorName, InvoiceNumber, InvoiceDate, InvoiceTotal, Currency and ConfidenceScore, with conditional formatting that highlights ConfidenceScore below 0.92 in red, and a card for Invoices Below Review Threshold.
+Add slicers for Currency, VendorName and dim_date[Date]. Default the Currency slicer to INR so amounts in different currencies are not mixed. Use a clean, consistent colour theme.
+```
+After Copilot builds it:
+- If the red highlight is missing: select the table → *ConfidenceScore* → **Conditional formatting → Font colour → Format style: Field value → `Confidence Colour`**.
+- Set the Currency slicer to **single select** and pick `INR`.
+
 ## Check after Copilot builds the page
 - **Top 10 vendors** — if the bar chart shows every vendor, add a *Top N* filter on `VendorName` = 10 by `Total Invoice Value`.
 - **Currency donut** — Format → **Edit interactions** → set the Currency slicer to *None* on the donut so it always shows the full currency mix.

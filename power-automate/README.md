@@ -77,7 +77,7 @@ Upload `excel/AutomatedInvoiceProcessingAgentOutput.xlsx` to **OneDrive for Busi
 6. Flow **Settings**: on the Excel action, *Retry policy* = Exponential, 4 retries. Under the trigger, *Concurrency control* = **On**, degree **1** (Excel tables don't like parallel writes).
 
 ### 2c. Optional — notify Finance
-After *Add a row*: **Condition** `ConfidenceScore` is less than `0.8` (or any field equals `NA`) → **Microsoft Teams → Post message in a chat or channel** with the vendor, invoice number and DocumentURL so someone checks it.
+After *Add a row*: **Condition** `ConfidenceScore` is less than `0.92` (the review threshold used in the Power BI report — keep the two in step) (or any field equals `NA`) → **Microsoft Teams → Post message in a chat or channel** with the vendor, invoice number and DocumentURL so someone checks it.
 
 ---
 

@@ -62,6 +62,16 @@ Workspace → **Create app** → include the report → audience *Finance & Ops*
 
 ---
 
+## Troubleshooting
+| Symptom | Cause | Fix |
+|---|---|---|
+| Visuals and fields are named `Column1`, `Column3`, `Column8` … | The dataflow read the **sheet** instead of the **table**, or headers weren't promoted, so the Lakehouse table has generic column names | Use [`dataflow-gen2-invoices.pq`](dataflow-gen2-invoices.pq) as-is: it reads `Item = "InvoiceOutput", Kind = "Table"` with headers. If you built the query with *Get data → Excel*, pick the **InvoiceOutput** table (not *Invoice Output* sheet) and **Use first row as headers**. Re-run the dataflow, then **refresh** the semantic model schema |
+| "Total Invoice Value" shows a small decimal such as `8.47` | The card sums `ConfidenceScore` (a generic column picked by Copilot) instead of `InvoiceTotal` | Fix the column names first (row above), then use the `Total Invoice Value` **measure**, not an implicit sum |
+| Amount cards are blank | More than one currency in the filter context | By design — select one currency in the slicer |
+| Amounts look like text (`USD 5,875.00`) or `NA` appears in totals | Rows written by an older agent version, or a dataflow without the type steps | The query's `ToNumber`/`Clean` helpers convert these; make sure the destination column types are **Decimal number** / **Date** |
+| New invoices don't appear | Dataflow hasn't refreshed since the agent wrote the row | Run the dataflow or shorten the scheduled refresh interval |
+| Same invoice twice | File re-uploaded with a different vendor spelling or invoice number | De-duplication is by vendor + invoice number; correct the source row in Excel |
+
 ### Scaling notes
 - Excel is fine for a pilot (hundreds to a few thousand rows). Beyond that, change Flow 2 to write to **Dataverse** or a **SharePoint list** and point this dataflow at it — the Lakehouse table, model and report stay the same.
 - For incremental loads, switch the `invoices` destination to **Append** and filter the source on `LoadedAtUtc`/a processed flag, or move to a Fabric notebook.

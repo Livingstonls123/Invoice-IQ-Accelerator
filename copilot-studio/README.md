@@ -49,5 +49,15 @@ Follow [`../power-automate/README.md` → Flow 1](../power-automate/README.md#fl
 3. Within ~1 minute: **Activity** tab shows a run started by the trigger → `extract_invoice` → `Save Automated Invoice Output` → *"Invoice processed successfully…"*.
 4. Open the Excel file — a new row in **Invoice Output**.
 
-## Agent status warnings you can ignore
-The Overview page may show warnings such as "no knowledge sources" — expected for this agent.
+## Resolve agent status warnings
+The Overview page shows an *Agent status* count (the reference demo had 3 warnings). Open **Review** and work through them before a customer demo:
+
+| Warning | Action |
+|---|---|
+| No knowledge sources | Expected — this agent must only use tool output. Leave as is. |
+| Web Search is enabled | Turn **Web Search off** (Overview → Knowledge). The instructions forbid outside sources, so leaving it on only adds risk. |
+| Tool or input has no description | Fill in the description of every flow input (the orchestrator uses them to map values) and the MCP server description. |
+| Authentication / connection needs attention | Re-open the tool's connection and sign in again, or update the API key after rotation. |
+| Topics not used | Greeting/Goodbye are harmless for an autonomous agent; you can disable them. |
+
+Publish again after changes; triggers only run the published version.

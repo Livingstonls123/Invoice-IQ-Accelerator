@@ -69,6 +69,19 @@ Invoices Needing Check =
 Complete Extraction % =
     DIVIDE ( CALCULATE ( [Invoice Count], invoices[DataQuality] = "Complete" ), [Invoice Count] )
 
+// Review threshold used in the reference demo: invoices below 92 % confidence get a human check.
+// Change the number here to move the threshold for every visual at once.
+Review Threshold = 0.92
+
+Invoices Below Review Threshold =
+    VAR t = [Review Threshold]
+    RETURN CALCULATE ( [Invoice Count], invoices[ConfidenceScore] < t )
+
+// Use as a field-value colour rule (Format → Conditional formatting → Field value) on ConfidenceScore.
+Confidence Colour =
+    VAR c = MIN ( invoices[ConfidenceScore] )
+    RETURN IF ( NOT ISBLANK ( c ) && c < [Review Threshold], "#C00000", "#1F4E79" )
+
 Missing Field Rate % =
     DIVIDE ( SUM ( invoices[MissingFieldCount] ), [Invoice Count] * 7 )
 
